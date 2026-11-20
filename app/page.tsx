@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { PROJECTS } from "@/lib/projects-data";
+import { PROJECTS, Project } from "@/lib/projects-data";
 import { ProjectCard } from "@/components/ProjectCard";
 import { ProjectFilter } from "@/components/ProjectFilter";
 import { ContactForm } from "@/components/ContactForm";
@@ -21,7 +21,21 @@ import {
 } from "lucide-react";
 
 export default function HomePage() {
+  const [projects, setProjects] = useState<Project[]>(PROJECTS);
+  const [isLiveSync, setIsLiveSync] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("All");
+
+  useEffect(() => {
+    fetch("/api/projects")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.projects && Array.isArray(data.projects)) {
+          setProjects(data.projects);
+          setIsLiveSync(data.dataSource?.includes("GitHub"));
+        }
+      })
+      .catch((err) => console.warn("Failed to fetch live projects API:", err));
+  }, []);
 
   const categories = [
     "All",
@@ -32,17 +46,17 @@ export default function HomePage() {
   ];
 
   const counts: Record<string, number> = {
-    All: PROJECTS.length,
-    "Full-Stack": PROJECTS.filter((p) => p.category === "Full-Stack").length,
-    "AI & Data": PROJECTS.filter((p) => p.category === "AI & Data").length,
-    "Real-Time": PROJECTS.filter((p) => p.category === "Real-Time").length,
-    "SaaS & Enterprise": PROJECTS.filter((p) => p.category === "SaaS & Enterprise").length,
+    All: projects.length,
+    "Full-Stack": projects.filter((p) => p.category === "Full-Stack").length,
+    "AI & Data": projects.filter((p) => p.category === "AI & Data").length,
+    "Real-Time": projects.filter((p) => p.category === "Real-Time").length,
+    "SaaS & Enterprise": projects.filter((p) => p.category === "SaaS & Enterprise").length,
   };
 
   const filteredProjects =
     selectedCategory === "All"
-      ? PROJECTS
-      : PROJECTS.filter((p) => p.category === selectedCategory);
+      ? projects
+      : projects.filter((p) => p.category === selectedCategory);
 
   return (
     <div className="relative">
@@ -177,15 +191,23 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
             <div>
-              <div className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-indigo-400 mb-2">
-                <FolderGit2 className="h-4 w-4" />
-                <span>The 10-Project Portfolio</span>
+              <div className="flex items-center gap-2 mb-2">
+                <div className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-indigo-400">
+                  <FolderGit2 className="h-4 w-4" />
+                  <span>The 10-Project Portfolio</span>
+                </div>
+                {isLiveSync && (
+                  <span className="inline-flex items-center gap-1 text-[11px] font-mono text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 px-2.5 py-0.5 rounded-full">
+                    <Radio className="h-3 w-3 animate-pulse" />
+                    <span>Live GitHub Sync</span>
+                  </span>
+                )}
               </div>
               <h2 className="text-3xl sm:text-4xl font-extrabold text-white">
                 Comprehensive Project Suite
               </h2>
               <p className="mt-2 text-sm text-slate-400 max-w-xl">
-                Filter across domains to inspect system architectures, data models, and live implementation progress.
+                Filter across domains to inspect system architectures, live telemetry from GitHub, and production deployments.
               </p>
             </div>
 

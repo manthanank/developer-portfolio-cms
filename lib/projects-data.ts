@@ -12,6 +12,11 @@ export interface Project {
   demoUrl?: string;
   slug: string;
   featured?: boolean;
+  liveStars?: number;
+  liveForks?: number;
+  lastPushedAt?: string;
+  openIssues?: number;
+  isLiveSynced?: boolean;
 }
 
 export const PROJECTS: Project[] = [

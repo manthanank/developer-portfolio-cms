@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { Project } from "@/lib/projects-data";
-import { ExternalLink, Github, ChevronDown, ChevronUp, Layers, CheckCircle2, Sparkles } from "lucide-react";
+import { ExternalLink, Github, ChevronDown, ChevronUp, Layers, CheckCircle2, Sparkles, Star, GitFork, Radio } from "lucide-react";
 
 interface ProjectCardProps {
   project: Project;
@@ -62,6 +62,26 @@ export function ProjectCard({ project }: ProjectCardProps) {
           </span>
         ))}
       </div>
+
+      {/* Live GitHub Telemetry Badge */}
+      {project.isLiveSynced && (
+        <div className="mt-3 flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-slate-950/90 border border-indigo-500/20 text-[11px] font-mono text-slate-400">
+          <div className="flex items-center gap-1.5 text-indigo-400">
+            <Radio className="h-3 w-3 animate-pulse text-emerald-400" />
+            <span className="font-semibold text-slate-200">Live Repo Telemetry</span>
+          </div>
+          <div className="flex items-center gap-3">
+            <span className="flex items-center gap-1 text-amber-300">
+              <Star className="h-3 w-3 fill-amber-300/80" />
+              <span>{project.liveStars ?? 0}</span>
+            </span>
+            <span className="flex items-center gap-1 text-slate-300">
+              <GitFork className="h-3 w-3" />
+              <span>{project.liveForks ?? 0}</span>
+            </span>
+          </div>
+        </div>
+      )}
 
       {/* Architecture Toggle */}
       <div className="mt-5 border-t border-slate-800/80 pt-4">

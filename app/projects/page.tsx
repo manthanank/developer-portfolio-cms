@@ -1,13 +1,29 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { PROJECTS, Project } from "@/lib/projects-data";
 import { ProjectCard } from "@/components/ProjectCard";
-import { Search, FolderGit2, Sparkles, Filter, CheckCircle2, ChevronRight, Github } from "lucide-react";
+import { Search, FolderGit2, Sparkles, Filter, CheckCircle2, ChevronRight, Github, Radio, RefreshCw } from "lucide-react";
 
 export default function ProjectsPage() {
+  const [projects, setProjects] = useState<Project[]>(PROJECTS);
+  const [isLiveSync, setIsLiveSync] = useState(false);
+  const [lastSyncTime, setLastSyncTime] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
+
+  useEffect(() => {
+    fetch("/api/projects")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.projects && Array.isArray(data.projects)) {
+          setProjects(data.projects);
+          setIsLiveSync(data.dataSource?.includes("GitHub"));
+          setLastSyncTime(new Date(data.lastSyncedAt).toLocaleTimeString());
+        }
+      })
+      .catch((err) => console.warn("Failed to fetch live projects API:", err));
+  }, []);
 
   const categories = [
     "All",
@@ -17,7 +33,7 @@ export default function ProjectsPage() {
     "SaaS & Enterprise",
   ];
 
-  const filteredProjects = PROJECTS.filter((project) => {
+  const filteredProjects = projects.filter((project) => {
     const matchesCategory =
       selectedCategory === "All" || project.category === selectedCategory;
     const matchesSearch =
@@ -32,10 +48,18 @@ export default function ProjectsPage() {
     <div className="py-16 md:py-24">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="mb-12">
-          <div className="inline-flex items-center gap-2 rounded-full border border-indigo-500/30 bg-indigo-500/10 px-3.5 py-1 text-xs font-semibold text-indigo-300 mb-3">
-            <Sparkles className="h-3.5 w-3.5" />
-            <span>Master Projects Directory</span>
+        <div className="mb-8">
+          <div className="flex flex-wrap items-center gap-3 mb-3">
+            <div className="inline-flex items-center gap-2 rounded-full border border-indigo-500/30 bg-indigo-500/10 px-3.5 py-1 text-xs font-semibold text-indigo-300">
+              <Sparkles className="h-3.5 w-3.5" />
+              <span>Master Projects Directory</span>
+            </div>
+            {isLiveSync && (
+              <div className="inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-xs font-mono text-emerald-400">
+                <Radio className="h-3 w-3 animate-pulse" />
+                <span>GitHub API Live Synchronized {lastSyncTime ? `(${lastSyncTime})` : ""}</span>
+              </div>
+            )}
           </div>
           <h1 className="text-3xl sm:text-5xl font-extrabold text-white">
             10 Full-Stack Applications
