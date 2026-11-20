@@ -5,6 +5,7 @@ import { Footer } from "@/components/Footer";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { AiAssistantModal } from "@/components/AiAssistantModal";
+import { AuthProvider } from "@/context/AuthContext";
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://developer-portfolio-cms-puce.vercel.app"),
@@ -109,10 +110,12 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-screen flex flex-col bg-slate-950 text-slate-100 antialiased selection:bg-indigo-500 selection:text-white">
-        <Navbar />
-        <main className="flex-grow">{children}</main>
-        <Footer />
-        <AiAssistantModal />
+        <AuthProvider>
+          <Navbar />
+          <main className="flex-grow">{children}</main>
+          <Footer />
+          <AiAssistantModal />
+        </AuthProvider>
         <Analytics />
         <SpeedInsights />
       </body>
