@@ -89,7 +89,7 @@ export const PROJECTS: Project[] = [
     description:
       "Retrieval-Augmented Generation (RAG) platform that allows users to upload PDF documents, extract chunks, generate vector embeddings, and stream grounded answers with source citations.",
     category: "AI & Data",
-    status: "Planned",
+    status: "Active / Scaffolding",
     techStack: ["Next.js", "OpenAI API", "Vector DB / pgvector", "Vercel AI SDK"],
     features: [
       "Drag-and-drop PDF upload and recursive text chunking",
@@ -101,6 +101,7 @@ export const PROJECTS: Project[] = [
     architectureNotes:
       "Server-Sent Events stream OpenAI completions. Embeddings are stored in pgvector using an HNSW index for sub-50ms semantic search queries.",
     githubRepo: "https://github.com/manthanank/ai-document-assistant",
+    demoUrl: "https://ai-document-assistant-lyart.vercel.app",
     slug: "ai-document-assistant",
     featured: true,
   },
