@@ -1,0 +1,54 @@
+---
+title: "Architecting 10 Modern Full-Stack Projects with Next.js 15: From Portfolio to Enterprise SaaS"
+date: "2026-11-18"
+excerpt: "A deep dive into system architecture, state management, database schema design, and deployment pipelines across 10 modern web applications."
+tags: ["Next.js", "System Design", "Architecture", "PostgreSQL", "Full-Stack"]
+authorName: "Manthan Ank"
+authorAvatar: "https://avatars.githubusercontent.com/u/72120015?v=4"
+---
+
+## The Vision Behind the 10-Project Architecture
+
+Modern full-stack engineering is no longer just about writing CRUD endpoints; it is about choosing the right primitives for scalability, latency, developer ergonomics, and reliability. When embarking on building a suite of 10 comprehensive applications, maintaining architectural consistency is paramount.
+
+Here is the breakdown of the foundational pillars across our projects:
+
+### 1. Hybrid Rendering Strategy
+Next.js 15 App Router provides Server Components (RSC) by default. For content-heavy hubs like our **Developer Portfolio CMS** and **MDX Blog**, Static Site Generation (SSG) combined with Incremental Static Regeneration (ISR) delivers sub-100ms TTFB (Time To First Byte).
+
+For transactional applications like the **E-Commerce Platform** and **Event Booking System**, we use dynamic server rendering alongside Server Actions with strict Zod validation.
+
+```typescript
+// Example: Type-Safe Server Action Pattern
+'use server';
+
+import { z } from 'zod';
+
+const OrderSchema = z.object({
+  productId: z.string().uuid(),
+  quantity: z.number().int().positive(),
+  paymentMethodId: z.string(),
+});
+
+export async function processOrder(formData: unknown) {
+  const result = OrderSchema.safeParse(formData);
+  if (!result.success) {
+    return { error: result.error.flatten().fieldErrors };
+  }
+  // Idempotent order reservation & Stripe session
+}
+```
+
+### 2. Multi-Tenancy & Data Isolation
+In the **Project Management SaaS**, multi-tenancy is enforced at the database level. Every query is filtered through a tenant identifier (`workspaceId`), backed by indexed composite keys to prevent cross-tenant data leaks.
+
+```sql
+-- Composite index for multi-tenant isolation
+CREATE INDEX idx_tasks_workspace_status ON "Task" ("workspaceId", "status", "priority");
+```
+
+### 3. Real-Time Event Driven Pipelines
+For the **Real-Time Chat Application** and **Collaborative Kanban Board**, WebSockets decouple client mutation from backend synchronization. Optimistic UI updates ensure zero perceived latency for users while background workers handle persistent writes.
+
+Stay tuned as we ship each of these projects sequentially!
+

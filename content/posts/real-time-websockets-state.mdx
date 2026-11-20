@@ -1,0 +1,52 @@
+---
+title: "Scaling Real-Time SaaS: WebSockets, Presence & Optimistic UI Updates"
+date: "2026-11-10"
+excerpt: "Architecting zero-latency real-time applications with Socket.IO, presence tracking, and optimistic state synchronization in React."
+tags: ["Real-Time", "WebSockets", "Socket.IO", "React", "State Management"]
+authorName: "Manthan Ank"
+authorAvatar: "https://avatars.githubusercontent.com/u/72120015?v=4"
+---
+
+## Eliminating Latency with Optimistic State
+
+When a user drags a card on a Kanban board or sends a direct message, waiting 200ms for a round-trip network response makes the interface feel sluggish. 
+
+The industry standard pattern is **Optimistic UI Updates**:
+
+1. Mutate client-side state immediately with a temporary client ID.
+2. Fire the WebSocket or REST mutation in the background.
+3. If the server acks, reconcile the temporary ID with the persistent DB record.
+4. If the server returns an error, rollback the state and display a recovery toast.
+
+```typescript
+// Optimistic message dispatch with Zustand
+const useChatStore = create((set, get) => ({
+  messages: [],
+  sendMessage: async (text: string, channelId: string) => {
+    const tempId = `temp-${Date.now()}`;
+    const optimisticMsg = { id: tempId, text, status: 'sending', timestamp: new Date() };
+
+    // 1. Instant client update
+    set((state) => ({ messages: [...state.messages, optimisticMsg] }));
+
+    try {
+      // 2. Broadcast via WebSocket
+      const serverMsg = await socketEmit('chat:message', { text, channelId });
+      // 3. Reconcile
+      set((state) => ({
+        messages: state.messages.map((m) => (m.id === tempId ? serverMsg : m)),
+      }));
+    } catch (err) {
+      // 4. Rollback or flag error
+      set((state) => ({
+        messages: state.messages.map((m) =>
+          m.id === tempId ? { ...m, status: 'failed' } : m
+        ),
+      }));
+    }
+  },
+}));
+```
+
+Combined with heartbeat-based presence detection, this architecture delivers an interactive, native-feeling real-time application.
+

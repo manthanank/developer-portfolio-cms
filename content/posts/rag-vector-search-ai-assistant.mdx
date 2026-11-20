@@ -1,0 +1,37 @@
+---
+title: "Building an AI Document Assistant: Chunking, pgvector & Streamed Completions"
+date: "2026-11-15"
+excerpt: "How to implement Retrieval-Augmented Generation (RAG) with Next.js, PDF chunking, OpenAI embeddings, and sub-50ms vector similarity search."
+tags: ["AI", "RAG", "OpenAI", "pgvector", "Next.js"]
+authorName: "Manthan Ank"
+authorAvatar: "https://avatars.githubusercontent.com/u/72120015?v=4"
+---
+
+## Why RAG Outperforms Traditional Search
+
+Large Language Models (LLMs) are frozen in time and unaware of your private documents. Retrieval-Augmented Generation (RAG) bridges this gap by querying an indexed vector database for relevant text snippets and passing them as context to the model.
+
+### The Pipeline Architecture
+
+1. **Extraction**: Parse uploaded PDF binary streams into normalized UTF-8 text strings.
+2. **Chunking**: Break documents into semantically coherent segments (e.g., 500 tokens with 50-token overlap).
+3. **Embedding**: Generate dense 1536-dimensional vectors using OpenAI's `text-embedding-3-small`.
+4. **Indexing**: Store vectors in PostgreSQL using the `pgvector` extension with HNSW indexes.
+5. **Streaming**: Stream generated responses directly to the user via Server-Sent Events (SSE).
+
+```typescript
+// Semantic Similarity Query in pgvector
+export async function findSimilarChunks(queryVector: number[], documentId: string, limit = 5) {
+  const chunks = await prisma.$queryRaw`
+    SELECT id, "content", "pageNumber", 1 - ("embedding" <=> ${queryVector}::vector) AS similarity
+    FROM "DocumentChunk"
+    WHERE "documentId" = ${documentId}
+    ORDER BY "embedding" <=> ${queryVector}::vector
+    LIMIT ${limit};
+  `;
+  return chunks;
+}
+```
+
+By keeping chunk sizes calibrated and utilizing cosine distance indexing, latency remains low even with hundreds of documents uploaded.
+
