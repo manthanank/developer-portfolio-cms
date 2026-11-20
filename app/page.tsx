@@ -6,6 +6,7 @@ import { PROJECTS } from "@/lib/projects-data";
 import { ProjectCard } from "@/components/ProjectCard";
 import { ProjectFilter } from "@/components/ProjectFilter";
 import { ContactForm } from "@/components/ContactForm";
+import { SkillsSection } from "@/components/SkillsSection";
 import {
   ArrowRight,
   Terminal,
@@ -304,6 +305,9 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* Interactive Skills Matrix with Animations */}
+      <SkillsSection />
 
       {/* Contact Section */}
       <section id="contact" className="py-16 md:py-24 border-t border-slate-800/80 bg-slate-950/60">

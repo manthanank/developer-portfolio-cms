@@ -1,0 +1,20 @@
+# Cursor & Windsurf AI Rules for Developer Portfolio CMS
+
+You are assisting on Manthan Ank's Next.js 15 developer portfolio and full-stack project suite.
+
+## Tech Stack
+- Next.js 15 App Router
+- React 19
+- TypeScript (Strict Mode)
+- Tailwind CSS
+- Framer Motion
+- gray-matter for MDX processing
+- @vercel/analytics & @vercel/speed-insights
+
+## Code Conventions
+- Always write type-safe code using TypeScript interfaces.
+- Prefer Server Components (`RSC`) for data fetching; add `'use client'` only when using hooks, browser APIs, or Framer Motion.
+- All forms must validate inputs before sending requests to route handlers (`app/api/*`).
+- Style using Tailwind utility classes adhering to the slate/indigo/purple dark theme.
+- Never hardcode API keys or secrets in source files; use `.env.local`.
+
