@@ -12,11 +12,15 @@ interface ProjectCardProps {
 export function ProjectCard({ project }: ProjectCardProps) {
   const [showArchitecture, setShowArchitecture] = useState(false);
 
-  const statusColor = {
+  const statusColor: Record<string, string> = {
+    "Production Live": "bg-emerald-500/10 text-emerald-400 border-emerald-500/30 font-semibold",
+    "Active": "bg-emerald-500/10 text-emerald-400 border-emerald-500/30",
+    "Beta": "bg-amber-500/10 text-amber-400 border-amber-500/30",
     "Active / Scaffolding": "bg-emerald-500/10 text-emerald-400 border-emerald-500/30",
     "In Development": "bg-amber-500/10 text-amber-400 border-amber-500/30",
     "Planned": "bg-slate-800 text-slate-400 border-slate-700",
-  }[project.status];
+  };
+  const activeStatusClass = statusColor[project.status] || "bg-emerald-500/10 text-emerald-400 border-emerald-500/30";
 
   const categoryColor = {
     "Full-Stack": "bg-indigo-500/10 text-indigo-400 border-indigo-500/30",
@@ -32,8 +36,8 @@ export function ProjectCard({ project }: ProjectCardProps) {
         <span className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold border ${categoryColor}`}>
           {project.category}
         </span>
-        <span className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium border ${statusColor}`}>
-          {project.status === "Active / Scaffolding" && (
+        <span className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium border ${activeStatusClass}`}>
+          {(project.status === "Production Live" || project.status === "Active") && (
             <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
           )}
           {project.status}
@@ -111,10 +115,11 @@ export function ProjectCard({ project }: ProjectCardProps) {
             href={project.demoUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-1 font-medium text-indigo-400 hover:text-indigo-300 transition-colors"
+            className="flex items-center gap-1.5 font-semibold text-emerald-400 hover:text-emerald-300 transition-colors group"
           >
-            <span>Live Preview</span>
-            <ExternalLink className="h-3.5 w-3.5" />
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+            <span>Launch Live App</span>
+            <ExternalLink className="h-3.5 w-3.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
           </a>
         ) : (
           <Link
