@@ -199,8 +199,8 @@ export const PROJECTS: Project[] = [
     description:
       "A privacy-first wealth and budgeting dashboard with bank statement CSV import, recurring expense detection, category spending breakdowns, and time-series balance charts.",
     category: "AI & Data",
-    status: "Planned",
-    techStack: ["Next.js", "Recharts", "Supabase", "PostgreSQL"],
+    status: "Active / Scaffolding",
+    techStack: ["Next.js", "Recharts", "Supabase", "PostgreSQL", "PapaParse"],
     features: [
       "Supabase Row Level Security (RLS) for complete privacy",
       "Interactive time-series charts for expense distribution",
@@ -211,8 +211,9 @@ export const PROJECTS: Project[] = [
     architectureNotes:
       "Supabase PostgreSQL with strict RLS policies ensuring users can only read/write their own financial ledgers. Recharts renders client-side SVG visualizations.",
     githubRepo: "https://github.com/manthanank/personal-finance-dashboard",
+    demoUrl: "https://personal-finance-dashboard-eight-sigma.vercel.app",
     slug: "personal-finance-dashboard",
-    featured: false,
+    featured: true,
   },
   {
     id: "event-booking-platform",
