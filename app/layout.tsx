@@ -7,10 +7,17 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import { AiAssistantModal } from "@/components/AiAssistantModal";
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://developer-portfolio-cms-puce.vercel.app"),
   title: {
     default: "Manthan Ank — Full-Stack Engineer & SaaS Architect",
     template: "%s | Manthan Ank",
+  },
+  icons: {
+    icon: [
+      { url: "/favicon.svg", type: "image/svg+xml" },
+      { url: "/icon", sizes: "32x32", type: "image/png" },
+    ],
+    apple: [{ url: "/apple-icon", sizes: "180x180", type: "image/png" }],
   },
   description:
     "Portfolio and technical showcase of 10 modern full-stack projects built with Next.js 15, TypeScript, PostgreSQL, Stripe, WebSockets, and AI Document Intelligence.",
