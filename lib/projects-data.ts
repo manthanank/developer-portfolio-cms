@@ -111,7 +111,7 @@ export const PROJECTS: Project[] = [
     description:
       "A career management suite to organize job applications, track recruitment stages through an interactive pipeline, store recruiter contacts, and analyze conversion metrics.",
     category: "Full-Stack",
-    status: "Planned",
+    status: "Active / Scaffolding",
     techStack: ["Next.js", "PostgreSQL", "Prisma", "Tailwind CSS"],
     features: [
       "Visual application stage pipeline (Applied, Interviewing, Offer)",
@@ -123,8 +123,9 @@ export const PROJECTS: Project[] = [
     architectureNotes:
       "Next.js Server Actions with Zod validation. Normalized relational schema linking companies, applications, contacts, and interview stages.",
     githubRepo: "https://github.com/manthanank/job-search-tracker",
+    demoUrl: "https://job-search-tracker-lime.vercel.app",
     slug: "job-search-tracker",
-    featured: false,
+    featured: true,
   },
   {
     id: "social-media-dashboard",
