@@ -59,7 +59,7 @@ export default function HomePage() {
       : projects.filter((p) => p.category === selectedCategory);
 
   return (
-    <div className="relative">
+    <div className="relative overflow-x-clip">
       {/* Background Glow Accents */}
       <div className="pointer-events-none absolute -top-40 left-1/2 -z-10 h-[500px] w-[1000px] -translate-x-1/2 rounded-full bg-gradient-to-tr from-indigo-600/15 to-purple-600/15 blur-[120px]" />
 
